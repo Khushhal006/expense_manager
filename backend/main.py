@@ -15,21 +15,11 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-# mycursor.execute("CREATE DATABASE expense_db")
-# mycursor.execute("CREATE TABLE expense(date DATE, Amount int, Head VARCHAR(255), Tag VARCHAR(255), Note VARCHAR(255))")
-# mycursor.execute("CREATE TABLE kharcha(Date DATE, Amount int, Head VARCHAR(255), Tag VARCHAR(255), Note VARCHAR(255))")
 print(mydb)
-# Configuration
 DATABASE_NAME = "expense_db"
 
 @app.route('/view-expenses', methods=['GET'])
 def list_expenses():
-    # Retrieve all expenses from the database
-    # with sqlite3.connect(DATABASE_NAME) as conn:
-    #     cursor = conn.cursor()
-    #     cursor.execute("SELECT * FROM expense")
-    #     expenses = cursor.fetchall()
-
     mycursor.execute("SELECT * FROM kharcha")
 
     myresult = mycursor.fetchall()
@@ -66,13 +56,6 @@ def add_expense():
     if not head or not amount or not tag:
         return jsonify({"error": "Missing data"}), 400
 
-    # with sqlite3.connect(DATABASE_NAME) as conn:
-    #     cursor = conn.cursor()
-    #     cursor.execute(
-    #         "INSERT INTO kharcha(Date, Head, Amount, Tag, Note) VALUES (?, ?, ?, ?, ?)",
-    #         (date, head, amount, tag, note)
-    #     )
-    #     conn.commit()
     sql = "INSERT INTO kharcha(Date, Head, Amount, Tag, Note) VALUES (%s, %s, %s, %s, %s)"
     val = (date, head, amount, tag, note)
     mycursor.execute(sql, val)
@@ -83,13 +66,6 @@ def add_expense():
 
 @app.route('/summary', methods=['GET'])
 def get_summary():
-    # Calculate the total expenses and the number of expenses
-    # with sqlite3.connect(DATABASE_NAME) as conn:
-    #     cursor = conn.cursor()
-    #     cursor.execute("SELECT SUM(amount) FROM expenses")
-    #     total_expenses = cursor.fetchone()[0]
-    #     cursor.execute("SELECT COUNT(id) FROM expenses")
-    #     num_expenses = cursor.fetchone()[0]
     sql1 = "SELECT Head, SUM(Amount) FROM kharcha GROUP BY Head"
     mycursor.execute(sql1)
     myresult_head = mycursor.fetchall()
